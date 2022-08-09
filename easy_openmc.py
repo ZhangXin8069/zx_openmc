@@ -6,8 +6,22 @@ This is a simple input U_enrichment that gives the results module
 
 import sys
 import os
+import config
 
-U_enrichment = float(sys.argv[1])
+try:
+    os.system("rm statepoint.*")
+except Exception as e:
+    print(e)
+
+U_enrichment = config.U_enrichment
+
+argv = sys.argv
+
+try:
+    if argv.index("-U"):
+        U_enrichment = eval(argv[argv.index("-U")+1])
+except Exception as e:
+    print(e)
 
 
 import make_materials
@@ -17,7 +31,7 @@ import make_cell
 import default_setting
 import openmc
 
-material_list = make_materials.make_materials(model="zx", U_enrichment=U_enrichment)
+material_list = make_materials.make_materials(U_enrichment=U_enrichment)
 radius_list, Z_coordinate_list = make_surface.make_surface()
 region_list = make_region.make_region(
     radius_list=radius_list, Z_coordinate_list=Z_coordinate_list
@@ -37,8 +51,5 @@ openmc.run()
 sp = openmc.StatePoint("statepoint.200.h5")
 keff = sp.keff
 sp.close()
-try:
-    os.system("rm statepoint.*")
-except Exception as e:
-    print(e)
+
 os.system('echo "P(u):{} keff:{}" >> keff.txt'.format(U_enrichment, keff))

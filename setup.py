@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
   name="zx_openmc",
-  version="0.0.1",
+  version="0.0.5",
   author="zhangxin",
   author_email="1514962740@qq.com",
   description="This is a solution to the OpenMC benchmark",

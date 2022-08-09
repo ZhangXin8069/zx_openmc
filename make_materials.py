@@ -10,8 +10,7 @@ def composition_name(name="O", number=4):
 
 
 def make_materials(
-    model=None,
-    U_enrichment=None,
+    U_enrichment=1.0,
     temperature=293.15,
     composition_list=["Th_232", "U_233", "O", "Fe", "Cr", "Mn", "W", "Pb"],
     max_position=[3, 2, 3, 4, 4, 4, 4, 5],
@@ -47,11 +46,11 @@ def make_materials(
         3.05e-2,
     ],
 ):
-    if model != None:
-        correspond_density[0]+=correspond_density[3]*(1-U_enrichment)
-        correspond_density[1]+=correspond_density[4]*(1-U_enrichment)
-        correspond_density[3]*=U_enrichment
-        correspond_density[4]*=U_enrichment
+    correspond_density[0]+=correspond_density[3]*(1-U_enrichment)
+    correspond_density[1]+=correspond_density[4]*(1-U_enrichment)
+    correspond_density[3]*=U_enrichment
+    correspond_density[4]*=U_enrichment
+    
     composition_name_list0 = [
         composition_name(name=i, number=j)
         for i, j in zip(composition_list, max_position)

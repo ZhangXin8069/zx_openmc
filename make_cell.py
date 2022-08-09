@@ -12,9 +12,15 @@ def make_cell(
 ):
     cell_list = [i for i in range(len(region_list))]
     for i in cell_list:
+        if i ==None:
+            cell_list[i] = Cell(
+            fill=None,
+            region=region_list[i])
+            continue
+    
+            
         cell_list[i] = Cell(
             fill=material_list[correspond_cell_material_number[i]],
-            region=region_list[i],
-        )
+            region=region_list[i])
     
     return cell_list

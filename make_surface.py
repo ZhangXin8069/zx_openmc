@@ -2,11 +2,14 @@
 This is a module that creates openmc.Surface
 """
 from openmc import ZCylinder, ZPlane
+from zx_openmc import config 
 
+Z_coordinate = config.Z_coordinate
+radius = config.radius
 
 def make_surface(
-    radius=[0, 10, 32.5, 82.5, 147.5, 162.5, 320],
-    Z_coordinate=[-320, -165, -75, -25, 25, 75, 165, 320],
+    radius=radius,
+    Z_coordinate=Z_coordinate,
 ):
     radius_list = [i for i in range(len(radius))]
     for i in range(len(radius)):

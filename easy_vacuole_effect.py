@@ -1,38 +1,53 @@
 """
-This is a simple input U_enrichment that gives the results module
-
+This is a simple module that simulates the Vacuole effect
 """
-
 
 import sys
 import os
 from zx_openmc import config 
-
-U_enrichment = config.U_enrichment
-temperature = config.temperature
-settings = config.settings
-correspond_density = config.correspond_density
 
 try:
     os.system("rm statepoint.*")
 except Exception as e:
     print(e)
 
+empty_list = config.empty_list
+U_enrichment = config.U_enrichment
+temperature = config.temperature
+settings = config.settings
+correspond_density = config.correspond_density
+P_u_keff_set = config.P_u_keff_set
 argv = sys.argv
 
 try:
+    if argv.index("-e"):
+        empty_list = eval(argv[argv.index("-e") + 1])
+except Exception as e:
+    print(e)
+
+
+try:
     if argv.index("-U"):
-        U_enrichment = eval(argv[argv.index("-U")+1])
+        U_enrichment = eval(argv[argv.index("-U") + 1])
 except Exception as e:
     print(e)
 
 try:
     if argv.index("-t"):
-        temperature = eval(argv[argv.index("-t")+1])
+        temperature = eval(argv[argv.index("-t") + 1])
 except Exception as e:
     print(e)
-    
-print('U_enrichment:{}\ntemperature:{}'.format(U_enrichment,temperature))
+
+for i in range(5):
+    if i in empty_list:
+        correspond_density[i - 5] = 0.0
+
+print(
+    "U_enrichment:{}\ntemperature:{}\nempty_list:{}".format(
+        U_enrichment, temperature, empty_list
+    )
+)
+
 
 from zx_openmc import make_materials
 from zx_openmc import make_surface
@@ -64,4 +79,18 @@ sp = openmc.StatePoint("statepoint.200.h5")
 keff = sp.keff
 sp.close()
 
-os.system('echo "P(u):{} T:{} keff:{}" >> keff.txt'.format(U_enrichment, temperature, keff))
+t = 1.0
+keff_bol = None
+for i in list(P_u_keff_set):
+    if abs(U_enrichment - i) <= 0.0001:
+        keff_bol = P_u_keff_set[i]
+        if keff < P_u_keff_set[i]:
+            t = -1.0
+os.system(
+    'echo "empty_list:{} keff_bol:{} keff:{} vacuole_effect:{:.0f}" >> vacule_effect.txt'.format(
+        empty_list,
+        keff_bol,
+        keff,
+        t * abs((keff.nominal_value - 1) / keff.nominal_value) * 1e5,
+    )
+)

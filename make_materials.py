@@ -3,54 +3,30 @@ This is a module that produces openmc.Materials
 """
 
 from openmc import Material
+from zx_openmc import config 
 
+U_enrichment = config.U_enrichment
+temperature = config.temperature
+composition_list = config.composition_list
+max_position = config.max_position
+correspond_density = config.correspond_density
 
 def composition_name(name="O", number=4):
     return [name + "_" + str(i) for i in range(1, number + 1)]
 
 
 def make_materials(
-    U_enrichment=1.0,
-    temperature=293.15,
-    composition_list=["Th_232", "U_233", "O", "Fe", "Cr", "Mn", "W", "Pb"],
-    max_position=[3, 2, 3, 4, 4, 4, 4, 5],
-    correspond_density=[
-        0,
-        0,
-        7.45e-3,
-        6.35e-3,
-        7.45e-3,
-        1.27e-2,
-        1.49e-2,
-        1.49e-2,
-        8.10e-3,
-        8.87e-3,
-        8.87e-3,
-        6.63e-3,
-        1.12e-3,
-        1.06e-3,
-        1.06e-3,
-        8.00e-4,
-        4.60e-5,
-        5.10e-5,
-        5.10e-5,
-        3.80e-5,
-        4.60e-5,
-        5.10e-5,
-        5.10e-5,
-        3.80e-5,
-        1.77e-2,
-        1.56e-2,
-        1.56e-2,
-        2.41e-2,
-        3.05e-2,
-    ],
+    U_enrichment= U_enrichment,
+    temperature= temperature,
+    composition_list= composition_list,
+    max_position= max_position,
+    correspond_density= correspond_density,
 ):
-    correspond_density[0]+=correspond_density[3]*(1-U_enrichment)
-    correspond_density[1]+=correspond_density[4]*(1-U_enrichment)
-    correspond_density[3]*=U_enrichment
-    correspond_density[4]*=U_enrichment
-    
+    correspond_density[0] += correspond_density[3] * (1 - U_enrichment)
+    correspond_density[1] += correspond_density[4] * (1 - U_enrichment)
+    correspond_density[3] *= U_enrichment
+    correspond_density[4] *= U_enrichment
+
     composition_name_list0 = [
         composition_name(name=i, number=j)
         for i, j in zip(composition_list, max_position)

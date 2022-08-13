@@ -5,8 +5,7 @@ from .make_materials import make_materials
 from .make_surface import make_surface
 from .make_region import make_region
 from .make_cell import make_cell
-
-
+from .easy_plot import Energy_Probability,Energy_colorbar,deplete_errorbar,keff_plot
 
 # import zx_openmc
 # import openmc
